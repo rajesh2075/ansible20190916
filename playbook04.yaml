@@ -1,0 +1,66 @@
+---
+- name: Learning about the fetch module
+  hosts: futurama
+
+  vars:
+          batman:
+                  - Gordon
+                  - Barbra
+                  - Riddler
+                  - Joker
+                  - ClayFace
+          superman:
+                  - Lois
+                  - Doomsday
+                  - Zod
+  
+  tasks:
+          - name: Employ the fetch module to grab a file
+            fetch:
+                    src: secondfloor.txt
+                    dest: /tmp/secondfloor.txt.{{ inventory_hostname }}
+                    flat: yes
+
+                    #          - name: Grab an entire directory (pull operation)
+                    #            synchronize:
+                    #                    mode: pull
+                    #                    src: /tmp/ 
+                    #                    dest: /tmp/{{ inventory_hostname }}
+
+                    #- name: Learn to print stuff to the screen
+                    #  debug:
+                    #      msg: "A character in the batman series is {{ item }}"
+                    #  loop: "{{ batman }}"
+
+          - name: Trying to copy a bunch of files back from a remote system
+            shell: (cd ~; find . -maxdepth 1 -type f) | cut -d'/' -f2
+            register: files_to_copy
+
+          - name: Trying to observe best practice
+            command: "echo $HOSTNAME"
+            register: result
+
+          - name: Show the result
+            debug:
+                    var: result
+
+          - name: Create my own var
+            set_var:
+                    mikevar: result.stdout
+
+          - name: fetch my backups
+            fetch:
+                    src: tas.backup
+                    dest: /backup/{{ mikevar }}-{{ ansible_date_time }}.backup
+                    flat: yes
+
+            #- name: A temp look at files_to_copy
+            #  debug:
+            #        var: files_to_copy.stdout_lines
+            #        # msg: "I am showing {{ files_to_copy }}"
+
+          - name: Grab a blob of files defined by files_to_copy
+            fetch:
+                    src: "{{ item }}"
+                    dest: /tmp/
+            loop: "{{ files_to_copy.stdout_lines }}"

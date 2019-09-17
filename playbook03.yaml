@@ -1,0 +1,26 @@
+---
+- name: Our first play
+  hosts: futurama:!farnsworth
+
+  tasks:
+          - name: Learning more about copy mod
+            copy:
+                    content: "Learning at 145 Chubb Way"
+                    dest: /tmp/secondfloor.txt
+
+          - name: Install steam locomotive on ALL machines
+            apt:
+                    name: sl
+                    state: present
+            become: yes
+
+
+- name: Our Second play
+  hosts: farnsworth
+
+  tasks:
+          - name: Install steam locomotive on all RHEL machines
+            yum:
+                    name: sl
+                    state: present
+            become: yes

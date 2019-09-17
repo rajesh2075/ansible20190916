@@ -1,0 +1,6 @@
+---
+- name: Learning to download images to be used in a cloud
+  hosts: futurama:&UbuntuOS
+
+  tasks:
+
