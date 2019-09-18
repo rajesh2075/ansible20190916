@@ -1,0 +1,18 @@
+# This file is required for any Space vessel to operate
+# manafest
+
+name = {{ ship_name }}
+
+type = {{ ship_type }}
+
+engine_type = {{ engines }}
+
+{% if not fuel or (fuel|int) == 0 %}
+WARNING: No fuel in the ship! Take off is not possible.
+{% elif (fuel|int) < 10 %}
+WARNING: Fuel in the ship is LOW! Take off is not advised.
+{% else %}
+dark_matter_capacity = {{ fuel }}
+{% endif %}
+
+estimate_ship_price = {{ price }}

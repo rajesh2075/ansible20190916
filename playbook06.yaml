@@ -1,6 +1,6 @@
 ---
 - name: Learning when examples
-  hosts: futurama:!farnsworth
+  hosts: all
   gather_facts: yes
 
   vars:

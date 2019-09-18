@@ -1,0 +1,26 @@
+---
+- name: Learning about template module
+  hosts: futurama
+
+  vars_files:
+          - ~/ans/vars/futuramaship.yaml
+
+            #  vars:
+            #          ship_name: Bessie
+            #          ship_type: Intergalatic
+            #          engines: Dark Matter
+            #          fuel: 100
+            #          price: 500
+
+  tasks:
+          - name: "Create the directory to place our finished ship.cfg in"
+            file:
+                    state: directory
+                    path: ~/config/   #remote hosts
+
+
+          - name: "Complete a configuration file"
+            template:
+                    src: templates/ship.cfg.j2 #controller
+                    dest: ~/config/ship.cfg    #remote hosts
+            when: ship_name != ""
