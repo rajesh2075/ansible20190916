@@ -1,0 +1,43 @@
+---
+- name: Checking on services states
+  hosts: futurama
+  vars:
+          srv2chk: ['rsync', 'ssh']
+
+  tasks:
+# activate this code as a REPLACEMENT for the service_facts module, if it does not run on a RHEL machine
+
+#          - name: what is the state of some service
+#            shell: ps -A | grep "{{ item }}"
+#            loop: "{{ srv2chk }}"
+#            register: result
+#            ignore_errors: yes
+
+#          - debug:
+#              var: result
+
+
+          - name: populate service facts
+            service_facts:
+
+          - name: What is the value of services atm
+            debug:
+                    var: ansible_facts.services
+
+          - name: Printing out state of services
+            debug:
+                    msg: "The service {{ item.key }} is {{ item.value.state }}"
+            loop: "{{ lookup('dict', ansible_facts.services ) }}"
+
+          - name: create a file
+            file:
+                    name: ~/service.log
+                    state: touch
+            delegate_to: localhost
+
+          - name: Create a hardcopy of our data
+            lineinfile:
+                    path: ~/service.log
+                    line: "{{ inventory_hostname }} - {{ item.key }} is {{ item.value.state }}"
+            loop: "{{ lookup('dict', ansible_facts.services ) }}"
+            delegate_to: localhost # make this tasks ONLY run on the controller (localhost)

@@ -1,0 +1,16 @@
+---
+- name: Push a script to our hosts and run it!
+  hosts: futurama
+  gather_facts: yes
+
+  tasks:
+
+  - name: Run our python script
+    script: /home/student/py/holamundo.py # script lives on the CONTROLLER! but executes on the HOSTS
+    args:
+      executable: python3
+    register: results
+
+  - name: What did holamundo produce
+    debug:
+      var: results

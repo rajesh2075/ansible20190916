@@ -1,0 +1,53 @@
+---
+- name: A playbook exploring loops
+  hosts: localhost
+
+  vars:
+          my_list:
+                  - A hyphen is a entry in a list
+                  - So this is the second item on the list
+                  - Whereas this is the third
+                  - the item var is always replaced by an item from the loops list
+          my_list2:
+                  - Here is another list
+                  - Use quotes or dont use quotes
+                  - single quotes or double quotes work
+          jarlist: [1,1,1,1,1,5]
+          repeatlist: [1,1,1,1,2,2,2,2,2,9,9,9,9]
+          repeat2list: [5,5,5,5,5,5,5,6,7]
+          complexlist: [6,7,8,[9,10,11,22],87]
+
+ 
+  tasks:
+          - name: Using debug to test loop theory
+            debug:
+                    msg: "Debug allows us to dump to the screen: {{ item }}"
+            loop:
+                    #"{{ my_list | union(my_list2) | flatten }}"
+                    #- "{{ my_list2 }}"
+                    "{{ my_list | union(my_list2) }}"
+
+          - name: Display the min value of jarlist
+            debug:
+                    msg: "The min value of jarlist is: {{ jarlist | min }}"
+
+          - name: Display the max value of jarlist
+            debug:
+                    msg: "the max value of jarlist is: {{ jarlist | max }}"
+
+
+          - name: Transform the complex list into a flat list
+            debug:
+                    msg: "Before complex list was: {{ complexlist }} but now it is {{ complexlist | flatten }}"
+
+          - name: Pull the unique values from a list
+            debug:
+                    msg: "Unique values of repeatlist: {{ repeatlist | unique }}"
+
+          - name: Produce a union of two lists
+            debug:
+                    msg: "The union of repeatlist and repeat2list: {{ repeatlist | union(repeat2list) }}"
+
+          - name: Produce the diff of two lists
+            debug:
+                    msg: "The diff of repeatlist and repeat2list: {{ repeatlist | difference(repeat2list) }}"
